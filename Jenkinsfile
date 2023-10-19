@@ -11,7 +11,7 @@ pipeline {
                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops.git']]
                     ])
                 }
-            }
+            } 
         }
 
         stage('Clean') {

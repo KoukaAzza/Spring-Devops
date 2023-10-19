@@ -33,14 +33,14 @@ pipeline {
               }
             }
           }
-         /*stage('Email notification') {
+         stage('Email notification') {
             steps {
                 mail bcc: '', body: '''this is a Jenkins email alerts linked with GitHub 
                     test
                     thank you
                     Azza KOUKA''', cc: '', from: '', replyTo: '', subject: 'Jenkins notification', to: 'azza.kouka@esprit.tn'
             }
-        }*/
+        }
     
         //Add more stages
 } 

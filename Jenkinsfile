@@ -32,24 +32,15 @@ pipeline {
                     sh 'mvn sonar:sonar'
                 }
             }
-                post {
-        success {
-            emailext subject: 'Jenkins success',
-                      body: '''this is a Jenkins email alerts linked with GitHub
-                      test
-                      thank you
-                      Azza KOUKA''',
-                      to: 'azzakouka50@gmail.com'
         }
-        failure {
-            emailext subject: 'Jenkins failure',
-                      body: '''this is a Jenkins email alerts linked with GitHub
-                      test
-                      thank you
-                      Azza KOUKA''',
-                      to: 'azzakouka50@gmail.com'
-        }
-    }
+
+        stage('Email notification') {
+            steps {
+                mail bcc: '', body: '''this is a Jenkins email alerts linked with GitHub 
+                    test
+                    thank you
+                    Azza KOUKA''', cc: '', from: '', replyTo: '', subject: 'Jenkins notification', to: 'azza.kouka@esprit.tn'
+            }
         }
     } 
 

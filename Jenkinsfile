@@ -25,6 +25,12 @@ pipeline {
             }
         }
 
+        stage('TEST') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
         stage("SonarQube analysis") {
             agent any
             steps {
@@ -56,4 +62,4 @@ pipeline {
     }
 }
 
-}
+

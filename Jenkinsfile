@@ -25,14 +25,27 @@ pipeline {
                 sh 'mvn compile'
             }
         }
-           stage('Email notification') {
+     /*   stage('Test') {
+            steps {
+                script {
+            // Change directory to your Spring Boot application directory
+                dir('https://github.com/KoukaAzza/Spring-Devops/tree/master/src/test') {
+                // Use Maven to run tests
+                sh 'mvn test'
+                // or use Gradle to run tests
+                // sh './gradlew test'
+            }
+        }
+    }
+}*/
+         /*  stage('Email notification') {
             steps {
                 mail bcc: '', body: '''this is a Jenkins email alerts linked with GitHub 
                     test
                     thank you
                     Azza KOUKA''', cc: '', from: '', replyTo: '', subject: 'Jenkins notification', to: 'azza.kouka@esprit.tn'
             }
-        }
+        }*/
          stage("SonarQube analysis") {
             agent any
             steps {
@@ -44,5 +57,21 @@ pipeline {
       
     
         //Add more stages
-} 
+}
+    post {
+                success {
+                    emailext(
+                        subject: "Success: SonarQube Analysis Completed",
+                        body: "SonarQube analysis was successful.",
+                        to: "azza.kouka@esprit.tn"
+                    )
+                }
+                failure {
+                    emailext(
+                        subject: "Failure: SonarQube Analysis Failed",
+                        body: "SonarQube analysis has failed.",
+                        to: "azza.kouka@esprit.tn"
+                    )
+                }
+            }
 } 

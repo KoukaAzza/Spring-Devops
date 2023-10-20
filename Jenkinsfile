@@ -59,9 +59,7 @@ pipeline {
                 sh 'mvn sonar:sonar'
               } 
             }
-          }
-
-         post {
+             post {
                 success {
                     emailext(
                         subject: "Success: SonarQube Analysis Completed",
@@ -77,8 +75,33 @@ pipeline {
                     )
                 }
             }
+          }
+
+         
         //Add more stages
     }
     
            
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

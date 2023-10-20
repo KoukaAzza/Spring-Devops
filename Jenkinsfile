@@ -4,7 +4,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Checkout your source code from the repository.
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']], 
@@ -26,6 +25,12 @@ pipeline {
             }
         }
 
+        stage("Test") {
+            steps {
+                sh 'mvn test'  // This runs your Spring Boot application tests using Maven
+            }
+        }
+
         stage("SonarQube analysis") {
             agent any
             steps {
@@ -37,13 +42,19 @@ pipeline {
     } 
     post {
         success {
-            emailext subject: 'Jenkins Pipeline Successful',
-                      body: 'Your Jenkins pipeline has successfully completed.',
+            emailext subject: 'Jenkins success',
+                      body: '''this is a Jenkins email alerts linked with GitHub
+                      test
+                      thank you
+                      Azza KOUKA''',
                       to: 'azza.kouka@esprit.tn'
         }
         failure {
-            emailext subject: 'Jenkins Pipeline Failed',
-                      body: 'Your Jenkins pipeline has failed. Please check the build logs for details.',
+            emailext subject: 'Jenkins failure',
+                      body: '''this is a Jenkins email alerts linked with GitHub
+                      test
+                      thank you
+                      Azza KOUKA''',
                       to: 'azza.kouka@esprit.tn'
         }
     }

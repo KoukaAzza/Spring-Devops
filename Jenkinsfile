@@ -13,6 +13,12 @@ pipeline {
             }
         }
 
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+
         stage('Clean') {
             steps {
                 sh 'mvn clean'

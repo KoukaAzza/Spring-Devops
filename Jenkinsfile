@@ -32,9 +32,7 @@ pipeline {
                     sh 'mvn sonar:sonar'
                 }
             }
-        }
-    } 
-    post {
+                post {
         success {
             emailext subject: 'Jenkins success',
                       body: '''this is a Jenkins email alerts linked with GitHub
@@ -52,4 +50,7 @@ pipeline {
                       to: 'azzakouka50@gmail.com'
         }
     }
+        }
+    } 
+
 }

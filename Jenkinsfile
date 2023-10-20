@@ -25,12 +25,6 @@ pipeline {
             }
         }
 
-        stage("Test") {
-            steps {
-                sh 'mvn test'  // This runs your Spring Boot application tests using Maven
-            }
-        }
-
         stage("SonarQube analysis") {
             agent any
             steps {

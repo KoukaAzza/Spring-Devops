@@ -65,14 +65,16 @@ pipeline {
             post {
                 success {
                     emailext(
-                         mail bcc: '', body: '''SonarQube analysis has passed. 
-                         ''', cc: '', from: '', replyTo: '', subject: 'Success: SonarQube Analysis Success', to: 'azza.kouka@esprit.tn'
+                        subject: "Success: SonarQube Analysis Completed",
+                        body: "SonarQube analysis was successful.",
+                        to: "mohamed.rouahi@esprit.tn"
                     )
                 }
                 failure {
                     emailext(
-                        mail bcc: '', body: '''SonarQube analysis has failed. 
-                         ''', cc: '', from: '', replyTo: '', subject: 'Failure: SonarQube Analysis Failure', to: 'azza.kouka@esprit.tn'
+                        subject: "Failure: SonarQube Analysis Failed",
+                        body: "SonarQube analysis has failed.",
+                        to: "mohamed.rouahi@esprit.tn"
                     )
                 }
             }

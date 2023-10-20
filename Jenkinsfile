@@ -33,24 +33,25 @@ pipeline {
                 }
             }
         }
-        post {
-            success {
-            steps {
-                mail bcc: '', body: '''this is a Jenkins email alerts linked with GitHub 
-                    test
-                    thank you
-                    Azza KOUKA''', cc: '', from: '', replyTo: '', subject: 'Jenkins notification', to: 'azza.kouka@esprit.tn'
-            }
-        }
-             failure {
-            steps {
-                mail bcc: '', body: '''this is a Jenkins email alerts linked with GitHub 
-                    test
-                    thank you
-                    Azza KOUKA''', cc: '', from: '', replyTo: '', subject: 'Jenkins notification', to: 'azza.kouka@esprit.tn'
-            }
-        }
-        }
-    } 
+    }
 
+    post {
+        success {
+            mail to: 'azza.kouka@esprit.tn',
+                 subject: 'Jenkins Notification: Success',
+                 body: '''This is a Jenkins email alerts linked with GitHub.
+                    Test
+                    Thank you
+                    Azza KOUKA'''
+        }
+
+        failure {
+            mail to: 'azza.kouka@esprit.tn',
+                 subject: 'Jenkins Notification: Failure',
+                 body: '''This is a Jenkins email alerts linked with GitHub.
+                    Test
+                    Thank you
+                    Azza KOUKA'''
+        }
+    }
 }

@@ -41,7 +41,7 @@ pipeline {
                       test
                       thank you
                       Azza KOUKA''',
-                      to: 'azza.kouka@esprit.tn'
+                      to: 'azzakouka50@gmail.com'
         }
         failure {
             emailext subject: 'Jenkins failure',
@@ -49,7 +49,7 @@ pipeline {
                       test
                       thank you
                       Azza KOUKA''',
-                      to: 'azza.kouka@esprit.tn'
+                      to: 'azzakouka50@gmail.com'
         }
     }
 }

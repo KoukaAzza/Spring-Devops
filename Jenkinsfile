@@ -25,6 +25,12 @@ pipeline {
                 sh 'mvn compile'
             }
         }
+
+         stage('TEST') {
+            steps {
+                sh 'mvn test'
+            }
+        }
      /*   stage('Test') {
             steps {
                 script {
@@ -54,23 +60,19 @@ pipeline {
               } 
             }
           }
-      
-    
         //Add more stages
-}
-    post {
+    }
+            post {
                 success {
                     emailext(
-                        subject: "Success: SonarQube Analysis Completed",
-                        body: "SonarQube analysis was successful.",
-                        to: "azza.kouka@esprit.tn"
+                         mail bcc: '', body: '''SonarQube analysis has passed. 
+                         ''', cc: '', from: '', replyTo: '', subject: 'Success: SonarQube Analysis Success', to: 'azza.kouka@esprit.tn'
                     )
                 }
                 failure {
                     emailext(
-                        subject: "Failure: SonarQube Analysis Failed",
-                        body: "SonarQube analysis has failed.",
-                        to: "azza.kouka@esprit.tn"
+                        mail bcc: '', body: '''SonarQube analysis has failed. 
+                         ''', cc: '', from: '', replyTo: '', subject: 'Failure: SonarQube Analysis Failure', to: 'azza.kouka@esprit.tn'
                     )
                 }
             }

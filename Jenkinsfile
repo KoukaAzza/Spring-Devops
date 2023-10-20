@@ -8,7 +8,7 @@ pipeline {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']], 
-                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops.git']]
+                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/DevOps-Spring.git']]
                     ])
                 }
             }
@@ -18,7 +18,6 @@ pipeline {
             steps {
                 sh 'mvn clean'
             }
-        
         }
 
         stage('COMPILE') {
@@ -27,35 +26,31 @@ pipeline {
             }
         }
 
-        stage("SonarQube analysis") {
+        stage("Test") {
             steps {
-                 withSonarQubeEnv('sonarQube') {
-                sh 'mvn sonar:sonar'
-              } 
+                sh 'mvn test'  // This runs your Spring Boot application tests using Maven
             }
-            post {
-                success {
-                    emailext(
-                        subject: "Success: SonarQube Analysis Completed",
-                        body: "SonarQube analysis was successful.",
-                        to: "azza.kouka@esprit.tn"
-                    )
-                }
-                failure {
-                    emailext(
-                        subject: "Failure: SonarQube Analysis Failed",
-                        body: "SonarQube analysis has failed.",
-                        to: "azza.kouka@esprit.tn"
-                    )
+        }
+
+        stage("SonarQube analysis") {
+            agent any
+            steps {
+                withSonarQubeEnv('sonarQube') {
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
+    } 
+    post {
+        success {
+            emailext subject: 'Jenkins Pipeline Successful',
+                      body: 'Your Jenkins pipeline has successfully completed.',
+                      to: 'azza.kouka@esprit.tn'
+        }
+        failure {
+            emailext subject: 'Jenkins Pipeline Failed',
+                      body: 'Your Jenkins pipeline has failed. Please check the build logs for details.',
+                      to: 'azza.kouka@esprit.tn'
+        }
     }
 }
-
-
-
-
-
-
-

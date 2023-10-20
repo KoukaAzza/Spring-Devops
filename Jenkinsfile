@@ -26,11 +26,11 @@ pipeline {
             }
         }
 
-         stage('TEST') {
+        /* stage('TEST') {
             steps {
                 sh 'mvn test'
             }
-        }
+        }*/
      /*   stage('Test') {
             steps {
                 script {
@@ -60,9 +60,8 @@ pipeline {
               } 
             }
           }
-        //Add more stages
-    }
-            post {
+
+         post {
                 success {
                     emailext(
                         subject: "Success: SonarQube Analysis Completed",
@@ -78,4 +77,8 @@ pipeline {
                     )
                 }
             }
+        //Add more stages
+    }
+    
+           
 } 

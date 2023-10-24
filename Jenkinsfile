@@ -5,11 +5,11 @@ pipeline {
             steps {
                 script {
                     // Set the default JAVA_HOME to Java 8
-                    tool name: 'JAVA_HOME', type: 'jdk'
+                    tool name: 'JAVAA_HOME', type: 'jdk'
                 }
             }
         }
-        stage('Checkout') {
+        stage('Checkout Backend Repo') {
             steps {
                 script {
                     // Checkout your source code from the repository.
@@ -21,15 +21,15 @@ pipeline {
                 }
             }
         }
-        stage('BUILD') {
+        stage('BUILD Backend') {
             steps {
                 // Use Java 8 for this stage
-                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+                withEnv(["JAVA_HOME=${tool name: 'JAVAA_HOME', type: 'jdk'}"]) {
                     sh 'mvn clean package'
                 }
             }
         }
-        stage('Compile') {
+        stage('COMPILE Backend') {
             steps {
                 // Use the default Java 8 for this stage
                 sh 'mvn compile'
@@ -38,8 +38,8 @@ pipeline {
         stage("SonarQube Analysis") {
             steps {
                 // Set Java 11 for this stage
-                tool name: 'JAVAA_HOME', type: 'jdk'
-                withEnv(["JAVA_HOME=${tool name: 'JAVAA_HOME', type: 'jdk'}"]) {
+                tool name: 'JAVA_HOME', type: 'jdk'
+                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
                     withSonarQubeEnv('sonarQube') {
                         script {
                             def scannerHome = tool 'SonarQubeScanner'
@@ -52,6 +52,26 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+        stage('Checkout Frontend Repo') {
+            steps {
+                script {
+                    // Checkout the frontend repository
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'master']], 
+                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
+                    ])
+                }
+            }
+        }
+        stage('Build Frontend') {
+            steps {
+                // Add steps to build your Angular frontend application here
+                // For example:
+                sh 'npm install'
+                sh 'ng build'
             }
         }
     }

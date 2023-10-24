@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     // Set the default JAVA_HOME to Java 8
-                    tool name: 'JAVAA_HOME', type: 'jdk'
+                    tool name: 'JAVA_HOME', type: 'jdk'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('BUILD Backend') {
             steps {
                 // Use Java 8 for this stage
-                withEnv(["JAVA_HOME=${tool name: 'JAVAA_HOME', type: 'jdk'}"]) {
+                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
                     sh 'mvn clean package'
                 }
             }
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 // Set Java 11 for this stage
                 tool name: 'JAVA_HOME', type: 'jdk'
-                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+                withEnv(["JAVAA_HOME=${tool name: 'JAVAA_HOME', type: 'jdk'}"]) {
                     withSonarQubeEnv('sonarQube') {
                         script {
                             def scannerHome = tool 'SonarQubeScanner'

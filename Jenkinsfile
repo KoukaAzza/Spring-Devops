@@ -66,6 +66,14 @@ pipeline {
                 }
             }
         }
+        stage('Set Node.js Version') {
+            steps {
+                script {
+                    sh 'nvm use 16.14.2'
+            }
+        }
+    }
+
         stage('Build Frontend') {
             steps {
                 // Add steps to build your Angular frontend application here

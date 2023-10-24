@@ -72,7 +72,7 @@ pipeline {
                 // Add steps to build your Angular frontend application here
                 // For example:
                 sh 'npm install'
-                sh 'npm run ng build'
+                sh 'ng build'
             }
         }
     }

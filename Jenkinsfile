@@ -18,7 +18,7 @@ pipeline {
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: '*/master']],
-                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/DevOps-Spring.git']]
+                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
                     ])
                 }
             }
@@ -75,7 +75,7 @@ pipeline {
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: '*/master']],
-                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/DevOps-Spring.git']]
+                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
             ])
 
             // Build and push the backend Docker image

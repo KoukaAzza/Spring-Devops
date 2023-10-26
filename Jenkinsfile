@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
-        BACKEND_IMAGE = 'your-docker-hub-username/devops-backend:latest'
+        BACKEND_IMAGE = 'azzakouka/devops-backend:latest'
     }
     stages {
         stage('Set Java Version') {

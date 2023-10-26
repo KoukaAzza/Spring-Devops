@@ -79,7 +79,7 @@ pipeline {
             ])
 
             // Build and push the backend Docker image
-            def backendImage = docker.build(BACKEND_IMAGE, '-f Dockerfile .')
+            def backendImage = docker.build(BACKEND_IMAGE, '-f ./Dockerfile .')
             backendImage.push()
         }
     }

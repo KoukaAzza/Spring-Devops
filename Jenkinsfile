@@ -35,21 +35,21 @@ pipeline {
                 sh 'mvn compile'
             }
         }
-        stage("SonarQube Analysis") {
-            steps {
-                tool name: 'JAVA_HOME', type: 'jdk'
-                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-                    withSonarQubeEnv('sonarQube') {
-                        script {
-                            def scannerHome = tool 'SonarQubeScanner'
-                            withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
-                                sh 'mvn sonar:sonar -Dsonar.java.binaries=target/classes'
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // stage("SonarQube Analysis") {
+        //     steps {
+        //         tool name: 'JAVA_HOME', type: 'jdk'
+        //         withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+        //             withSonarQubeEnv('sonarQube') {
+        //                 script {
+        //                     def scannerHome = tool 'SonarQubeScanner'
+        //                     withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
+        //                         sh 'mvn sonar:sonar -Dsonar.java.binaries=target/classes'
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Checkout Frontend Repo') {
             steps {
                 script {

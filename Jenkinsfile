@@ -68,18 +68,23 @@ pipeline {
                 sh 'npm run ng build'
             }
         }
-     stage('Build and Push Docker Image') {
-            steps {
-                script {
-                    // Navigate to the directory where the Dockerfile is located
-                    dir('Spring-Devop') {
-                        // Build and push the backend Docker image
-                        def backendImage = docker.build(BACKEND_IMAGE, '.')
-                        backendImage.push()
-                    }
-                }
-            }
+ stage('Build and Push Docker Image') {
+    steps {
+        script {
+            // Add the Git checkout step for the backend repository here
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: '*/master']],
+                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/DevOps-Spring.git']]
+            ])
+
+            // Build and push the backend Docker image
+            def backendImage = docker.build(BACKEND_IMAGE, '-f Dockerfile .')
+            backendImage.push()
         }
+    }
+}
+
     }
     post {
         success {

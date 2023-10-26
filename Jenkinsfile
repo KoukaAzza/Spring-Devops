@@ -72,7 +72,7 @@ pipeline {
             steps {
                 script {
                     // Build and push the backend Docker image
-                    def backendImage = docker.build(BACKEND_IMAGE, '-f Spring-Devop/Dockerfile .')
+                    def backendImage = docker.build(BACKEND_IMAGE, '-f Dockerfile .')
                     backendImage.push()
                 }
             }

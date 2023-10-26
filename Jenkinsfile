@@ -1,10 +1,13 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        BACKEND_IMAGE = 'your-docker-hub-username/devops-backend:latest'
+    }
     stages {
         stage('Set Java Version') {
             steps {
                 script {
-                    // Set the default JAVA_HOME to Java 8
                     tool name: 'JAVA_HOME', type: 'jdk'
                 }
             }
@@ -12,10 +15,9 @@ pipeline {
         stage('Checkout Backend Repo') {
             steps {
                 script {
-                    // Checkout your source code from the repository.
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: '*/master']], 
+                        branches: [[name: '*/master']],
                         userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/DevOps-Spring.git']]
                     ])
                 }
@@ -23,7 +25,6 @@ pipeline {
         }
         stage('BUILD Backend') {
             steps {
-                // Use Java 8 for this stage
                 withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
                     sh 'mvn clean package'
                 }
@@ -31,23 +32,18 @@ pipeline {
         }
         stage('COMPILE Backend') {
             steps {
-                // Use the default Java 8 for this stage
                 sh 'mvn compile'
             }
         }
         stage("SonarQube Analysis") {
             steps {
-                // Set Java 11 for this stage
                 tool name: 'JAVA_HOME', type: 'jdk'
-                withEnv(["JAVAA_HOME=${tool name: 'JAVAA_HOME', type: 'jdk'}"]) {
+                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
                     withSonarQubeEnv('sonarQube') {
                         script {
                             def scannerHome = tool 'SonarQubeScanner'
                             withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
-                                sh '''
-                                    mvn sonar:sonar \
-                                        -Dsonar.java.binaries=target/classes
-                                '''
+                                sh 'mvn sonar:sonar -Dsonar.java.binaries=target/classes'
                             }
                         }
                     }
@@ -57,10 +53,9 @@ pipeline {
         stage('Checkout Frontend Repo') {
             steps {
                 script {
-                    // Checkout the frontend repository
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: 'master']], 
+                        branches: [[name: 'master']],
                         userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
                     ])
                 }
@@ -69,42 +64,36 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                // Add steps to build your Angular frontend application here
-                // For example:
                 sh 'npm install'
                 sh 'npm run ng build'
             }
         }
-    }
-
-      stage('Build and Push Docker Images') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
-                    def backendImage = docker.build('azzakouka/devopsBackend', '-f Spring-Devop/Dockerfile .')
+                    // Build and push the backend Docker image
+                    def backendImage = docker.build(BACKEND_IMAGE, '-f Spring-Devop/Dockerfile .')
                     backendImage.push()
-                    
                 }
             }
-      }
-}
+        }
+    }
     post {
         success {
             mail to: 'azza.kouka@esprit.tn',
-                 subject: 'Jenkins Notification: Success',
-                 body: '''This is a Jenkins email alerts linked with GitHub.
-                    Test
-                    Thank you
-                    Azza KOUKA'''
+            subject: 'Jenkins Notification: Success',
+            body: '''This is a Jenkins email alerts linked with GitHub.
+                Build and push to Docker Hub successful.
+                Thank you
+                Azza KOUKA'''
         }
-
         failure {
             mail to: 'azza.kouka@esprit.tn',
-                 subject: 'Jenkins Notification: Failure',
-                 body: '''This is a Jenkins email alerts linked with GitHub.
-                    Test
-                    Thank you
-                    Azza KOUKA'''
+            subject: 'Jenkins Notification: Failure',
+            body: '''This is a Jenkins email alert linked with GitHub.
+                Build or push to Docker Hub failed.
+                Thank you
+                Azza KOUKA'''
         }
-  }
+    }
 }
-

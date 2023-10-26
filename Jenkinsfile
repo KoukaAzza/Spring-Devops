@@ -68,12 +68,15 @@ pipeline {
                 sh 'npm run ng build'
             }
         }
-        stage('Build and Push Docker Image') {
+     stage('Build and Push Docker Image') {
             steps {
                 script {
-                    // Build and push the backend Docker image
-                    def backendImage = docker.build(BACKEND_IMAGE, '-f Dockerfile .')
-                    backendImage.push()
+                    // Navigate to the directory where the Dockerfile is located
+                    dir('Spring-Devop') {
+                        // Build and push the backend Docker image
+                        def backendImage = docker.build(BACKEND_IMAGE, '.')
+                        backendImage.push()
+                    }
                 }
             }
         }

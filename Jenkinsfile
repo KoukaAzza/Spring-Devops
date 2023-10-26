@@ -76,6 +76,17 @@ pipeline {
             }
         }
     }
+
+      stage('Build and Push Docker Images') {
+            steps {
+                script {
+                    def backendImage = docker.build('azzakouka/devopsBackend', '-f Spring-Devop/Dockerfile .')
+                    backendImage.push()
+                    
+                }
+            }
+      }
+}
     post {
         success {
             mail to: 'azza.kouka@esprit.tn',

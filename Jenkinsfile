@@ -10,25 +10,25 @@ pipeline {
         }
 
 //****************** BUILD BACKEND - SPRINGBOOT **************************
-        // stage('Checkout Backend Repo') {
-        //     steps {
-        //         script {
-        //             checkout([
-        //                 $class: 'GitSCM',
-        //                 branches: [[name: '*/master']],
-        //                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
-        //             ])
-        //         }
-        //     }
-        // }
+        stage('Checkout Backend Repo') {
+            steps {
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/master']],
+                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+                    ])
+                }
+            }
+        }
 
-        // stage('BUILD Backend- TESTS') {
-        //     steps {
-        //         withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-        //             sh 'mvn clean test'
-        //         }
-        //     }
-        // }
+        stage('BUILD Backend- TESTS') {
+            steps {
+                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+                    sh 'mvn clean test'
+                }
+            }
+        }
         
         // stage('COMPILE Backend') {
         //     steps {
@@ -38,7 +38,7 @@ pipeline {
 
 
 //************************************* BUILD FRONTEND - ANGULAR ***************************
-              /*  stage('Checkout Frontend Repo') {
+                stage('Checkout Frontend Repo') {
                     steps {
                         script {
                             checkout([
@@ -56,7 +56,7 @@ pipeline {
                         sh 'npm run ng build'
                     }
                 }
-*/
+
 //******************************** DOCKER BUILD AND PUSH IMAGES **************************
                     //******************************** DOCKER BUILD AND PUSH BACKEND - SPRINGBOOT :latest  IMAGE
             // stage('Build and Push Backend Image') {

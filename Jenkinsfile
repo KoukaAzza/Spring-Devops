@@ -8,6 +8,8 @@ pipeline {
                 }
             }
         }
+
+//****************** BUILD BACKEND - SPRINGBOOT **************************
         stage('Checkout Backend Repo') {
             steps {
                 script {
@@ -19,74 +21,70 @@ pipeline {
                 }
             }
         }
-        // stage('BUILD Backend') {
-        //     steps {
-        //         withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-        //             sh 'mvn clean package'
-        //         }
-        //     }
-        // }
-        stage('COMPILE Backend') {
+
+        stage('BUILD Backend- TESTS') {
             steps {
-                sh 'mvn compile'
+                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+                    sh 'mvn clean test'
+                }
             }
         }
-        // stage("SonarQube Analysis") {
+        
+        // stage('COMPILE Backend') {
         //     steps {
-        //         tool name: 'JAVA_HOME', type: 'jdk'
-        //         withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-        //             withSonarQubeEnv('sonarQube') {
-        //                 script {
-        //                     def scannerHome = tool 'SonarQubeScanner'
-        //                     withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
-        //                         sh 'mvn sonar:sonar -Dsonar.java.binaries=target/classes'
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('Checkout Frontend Repo') {
-        //     steps {
-        //         script {
-        //             checkout([
-        //                 $class: 'GitSCM',
-        //                 branches: [[name: 'master']],
-        //                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
-        //             ])
-        //         }
+        //         sh 'mvn compile'
         //     }
         // }
 
-        // stage('Build Frontend') {
-        //     steps {
-        //         sh 'npm install'
-        //         sh 'npm run ng build'
-        //     }
-        // }
-// stage('Build and Push Backend Image') {
-//     steps {
-//         script {
-//             // Add the Git checkout step for the backend repository here
-//             checkout([
-//                 $class: 'GitSCM',
-//                 branches: [[name: '*/master']],
-//                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
-//             ])
+
+//************************************* BUILD FRONTEND - ANGULAR ***************************
+                stage('Checkout Frontend Repo') {
+                    steps {
+                        script {
+                            checkout([
+                                $class: 'GitSCM',
+                                branches: [[name: 'master']],
+                                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
+                            ])
+                        }
+                    }
+                }
+
+                stage('Build Frontend') {
+                    steps {
+                        sh 'npm install'
+                        sh 'npm run ng build'
+                    }
+                }
+
+//******************************** DOCKER BUILD AND PUSH IMAGES **************************
+                    //******************************** DOCKER BUILD AND PUSH BACKEND - SPRINGBOOT :latest  IMAGE
+            stage('Build and Push Backend Image') {
+                steps {
+                    script {
+                        // Add the Git checkout step for the backend repository here
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: '*/master']],
+                            userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+                        ])
+                        
+                        // Authenticate with Docker Hub using credentials
+                        withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
+                            sh "docker login -u azzakouka -p azzaesprit159"
+                        }
             
-//             // Authenticate with Docker Hub using credentials
-//             withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
-//                 sh "docker login -u azzakouka -p azzaesprit159"
-//             }
-            
-//             // Build the backend Docker image
-//             def backendImage = docker.build('azzakouka/devops', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
-            
-//             // Push the Docker image
-//             backendImage.push()
-//         }
-//     }
-// }
+                          // Build the backend Docker image
+                            def backendImage = docker.build('azzakouka/devops', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+                            
+                            // Push the Docker image
+                            backendImage.push()
+                        }
+                    }
+                }
+        
+
+          //******************************** DOCKER BUILD AND PUSH FRONTEND - ANGULAR :frontend  IMAGE **********
 
         stage('Build and Push Frontend Image') {
     steps {
@@ -111,27 +109,42 @@ pipeline {
         }
     }
 }
+//********************* SOANRQUBE ANALYSIS **********************
+            stage("SonarQube Analysis") {
+                steps {
+                    tool name: 'JAVA_HOME', type: 'jdk'
+                    withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+                        withSonarQubeEnv('sonarQube') {
+                            script {
+                                def scannerHome = tool 'SonarQubeScanner'
+                                withEnv(["PATH+SCANNER=${scannerHome}/bin"]) {
+                                    sh 'mvn sonar:sonar -Dsonar.java.binaries=target/classes'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
+ }
+//******************************* SENDING EMAIL - Success while Build pipeline Success / Failure while Build pipeline fails
 
-
-
-
-    }
+   
     post {
         success {
             mail to: 'azza.kouka@esprit.tn',
-            subject: 'Jenkins Notification: Success',
-            body: '''This is a Jenkins email alerts linked with GitHub.
+            subject: 'Jenkins Build pipeline: Success',
+            body: '''Your pipeline build success.
                 Build and push to Docker Hub successful.
-                Thank you
+                Thank you, go and check it
                 Azza KOUKA'''
         }
         failure {
             mail to: 'azza.kouka@esprit.tn',
-            subject: 'Jenkins Notification: Failure',
-            body: '''This is a Jenkins email alert linked with GitHub.
+            subject: 'Jenkins Build pipeline: Failure',
+            body: '''Your pipeline build failed.
                 Build or push to Docker Hub failed.
-                Thank you
+                Thank you, please check
                 Azza KOUKA'''
         }
     }

@@ -136,13 +136,12 @@ stage('Run Docker Compose') {
         //         }
         //     }
         // }
-                        
-        //     }
+
 
  
 //******************************* SENDING EMAIL - Success while Build pipeline Success / Failure while Build pipeline fails
-
-   
+}
+    
     post {
         success {
             mail to: 'azza.kouka@esprit.tn',

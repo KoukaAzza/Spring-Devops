@@ -110,15 +110,18 @@ pipeline {
     }
 }
 //********************* SOANRQUBE ANALYSIS **********************
-            stage("SonarQube Analysis") {
-                steps {
-                          sh 'mvn sonar:sonar'
-                                }
-                            }
+          stage("SonarQube analysis") {
+            agent any
+            steps {
+                withSonarQubeEnv('sonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
                         
             }
 
- }
+ 
 //******************************* SENDING EMAIL - Success while Build pipeline Success / Failure while Build pipeline fails
 
    

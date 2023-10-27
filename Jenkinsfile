@@ -76,7 +76,7 @@ stage('Build and Push Docker Image') {
             
             // Authenticate with Docker Hub using credentials
             withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
-                sh "docker login -u azzakouka -p ${password}"
+                sh "docker login -u azzakouka -p azzaesprit159"
             }
             
             // Build the backend Docker image

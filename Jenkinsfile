@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
-        BACKEND_IMAGE = 'azzakouka/devops-backend:latest'
+        BACKEND_IMAGE = 'azzakouka/devops:backend'
     }
     stages {
         stage('Set Java Version') {
@@ -23,13 +23,13 @@ pipeline {
                 }
             }
         }
-        stage('BUILD Backend') {
-            steps {
-                withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-                    sh 'mvn clean package'
-                }
-            }
-        }
+        // stage('BUILD Backend') {
+        //     steps {
+        //         withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+        //             sh 'mvn clean package'
+        //         }
+        //     }
+        // }
         stage('COMPILE Backend') {
             steps {
                 sh 'mvn compile'
@@ -50,24 +50,24 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Checkout Frontend Repo') {
-            steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: 'master']],
-                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
-                    ])
-                }
-            }
-        }
+        // stage('Checkout Frontend Repo') {
+        //     steps {
+        //         script {
+        //             checkout([
+        //                 $class: 'GitSCM',
+        //                 branches: [[name: 'master']],
+        //                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
+        //             ])
+        //         }
+        //     }
+        // }
 
-        stage('Build Frontend') {
-            steps {
-                sh 'npm install'
-                sh 'npm run ng build'
-            }
-        }
+        // stage('Build Frontend') {
+        //     steps {
+        //         sh 'npm install'
+        //         sh 'npm run ng build'
+        //     }
+        // }
  stage('Build and Push Docker Image') {
     steps {
         script {

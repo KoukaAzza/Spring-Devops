@@ -77,10 +77,13 @@ pipeline {
                 branches: [[name: '*/master']],
                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
             ])
-
+           
             // Build and push the backend Docker image
-            def backendImage = docker.build(BACKEND_IMAGE, '-f ./Dockerfile .')
-            backendImage.push()
+            def backendImage = docker.build(BACKEND_IMAGE, '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+             withCredentials([string(credentialsId: 'Docker', variable: 'password')]){
+                sh "docker login -u azzakouka -p ${password}"
+                backendImage.push()
+        }
         }
     }
 }

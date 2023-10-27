@@ -64,14 +64,38 @@ pipeline {
         //         sh 'npm run ng build'
         //     }
         // }
-stage('Build and Push Docker Image') {
+// stage('Build and Push Backend Image') {
+//     steps {
+//         script {
+//             // Add the Git checkout step for the backend repository here
+//             checkout([
+//                 $class: 'GitSCM',
+//                 branches: [[name: '*/master']],
+//                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+//             ])
+            
+//             // Authenticate with Docker Hub using credentials
+//             withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
+//                 sh "docker login -u azzakouka -p azzaesprit159"
+//             }
+            
+//             // Build the backend Docker image
+//             def backendImage = docker.build('azzakouka/devops', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+            
+//             // Push the Docker image
+//             backendImage.push()
+//         }
+//     }
+// }
+
+        stage('Build and Push Frontend Image') {
     steps {
         script {
             // Add the Git checkout step for the backend repository here
             checkout([
                 $class: 'GitSCM',
                 branches: [[name: '*/master']],
-                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops']]
             ])
             
             // Authenticate with Docker Hub using credentials
@@ -80,13 +104,15 @@ stage('Build and Push Docker Image') {
             }
             
             // Build the backend Docker image
-            def backendImage = docker.build('azzakouka/devops', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+            def backendImage = docker.build('azzakouka/devops:frontend', '-f Dockerfile .')
             
             // Push the Docker image
             backendImage.push()
         }
     }
 }
+
+
 
 
 

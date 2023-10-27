@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
-        BACKEND_IMAGE = 'azzakouka/devops:backend'
-    }
     stages {
         stage('Set Java Version') {
             steps {
@@ -68,25 +64,29 @@ pipeline {
         //         sh 'npm run ng build'
         //     }
         // }
- stage('Build and Push Docker Image') {
-    steps {
-        script {
-            // Add the Git checkout step for the backend repository here
-            checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/master']],
-                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
-            ])
-           
-            // Build and push the backend Docker image
-            def backendImage = docker.build(BACKEND_IMAGE, '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
-             withCredentials([string(credentialsId: 'Docker', variable: 'password')]){
-                sh "docker login -u azzakouka -p ${password}"
-                backendImage.push()
+stage('Build and Push back Images') {
+            steps {
+                script {
+                    // Ajoutez l'étape Git checkout pour le référentiel backend ici
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/master']],
+                        userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+                    ])
+
+                    // Build the backend Docker image
+                    def backendImage = docker.build('azzakouka/devops:backend', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+
+                    // Authentification Docker Hub avec des informations d'identification secrètes
+                    withCredentials([string(credentialsId: 'docker', variable: 'password')]) {
+                        sh "docker login -u azzakouka -p ${password}"
+                        // Poussez l'image Docker
+                        backendImage.push()
+                    }
+                }
+            }
         }
-        }
-    }
-}
+
 
     }
     post {

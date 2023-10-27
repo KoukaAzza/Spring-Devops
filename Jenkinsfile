@@ -78,7 +78,7 @@ stage('Build and Push back Images') {
                     def backendImage = docker.build('azzakouka/devops:backend', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
 
                     // Authentification Docker Hub avec des informations d'identification secrètes
-                    withCredentials([string(credentialsId: 'docker', variable: 'password')]) {
+                    withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
                         sh "docker login -u azzakouka -p ${password}"
                         // Poussez l'image Docker
                         backendImage.push()

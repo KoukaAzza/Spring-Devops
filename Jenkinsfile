@@ -122,7 +122,7 @@ stage('Run Docker Compose') {
             ])
 
             // Run the docker-compose command
-            sh 'docker compose up -f /var/lib/jenkins/workspace/Devops/docker-compose.yml -d' 
+            sh 'docker compose up -d' 
         }
     }
 }

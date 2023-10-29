@@ -38,24 +38,24 @@ pipeline {
 
 
 //************************************* BUILD FRONTEND - ANGULAR ***************************
-                stage('Checkout Frontend Repo') {
-                    steps {
-                        script {
-                            checkout([
-                                $class: 'GitSCM',
-                                branches: [[name: 'master']],
-                                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
-                            ])
-                        }
-                    }
-                }
+                // stage('Checkout Frontend Repo') {
+                //     steps {
+                //         script {
+                //             checkout([
+                //                 $class: 'GitSCM',
+                //                 branches: [[name: 'master']],
+                //                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
+                //             ])
+                //         }
+                //     }
+                // }
 
-                stage('Build Frontend') {
-                    steps {
-                        sh 'npm install'
-                        sh 'npm run ng build'
-                    }
-                }
+                // stage('Build Frontend') {
+                //     steps {
+                //         sh 'npm install'
+                //         sh 'npm run ng build'
+                //     }
+                // }
 
 //******************************** DOCKER BUILD AND PUSH IMAGES **************************
                     //******************************** DOCKER BUILD AND PUSH BACKEND - SPRINGBOOT :latest  IMAGE

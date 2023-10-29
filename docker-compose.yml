@@ -19,7 +19,7 @@ services:
     environment:
       BACKEND_URL: http://backend:8081
 
-mysqldb:
+  mysqldb:
     container_name: mysqldb
     image: "mysql:latest"
     restart: always

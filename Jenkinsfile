@@ -75,7 +75,7 @@ pipeline {
                         }
             
                           // Build the backend Docker image
-                            def backendImage = docker.build('azzakouka/devops:backend', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+                            def backendImage = docker.build('azzakouka/spring-app', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
                             
                             // Push the Docker image
                             backendImage.push()

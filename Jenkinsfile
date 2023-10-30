@@ -25,7 +25,7 @@ pipeline {
         stage('BUILD Backend- TESTS') {
             steps {
                 withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-                    sh 'mvn clean test'
+                    sh 'mvn clean install'
                 }
             }
         }

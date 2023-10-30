@@ -112,20 +112,29 @@ pipeline {
 
 //*********************** DOCKER-COMPOSE ****************
 
-stage('Run Docker Compose') {
-    steps {
-        script {
-            checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/master']], 
-                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
-            ])
+// stage('Run Docker Compose') {
+//     steps {
+//         script {
+//             checkout([
+//                 $class: 'GitSCM',
+//                 branches: [[name: '*/master']], 
+//                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+//             ])
 
-            // Run the docker-compose command
+//             // Run the docker-compose command
+//             sh 'docker compose up -d' 
+//         }
+//     }
+// }
+
+        stage('Run Docker Compose') {
+          steps {
+             script {
+            checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Docker', url: 'https://github.com/KoukaAzza/Spring-Devops']])
             sh 'docker compose up -d' 
-        }
-    }
-}
+              }
+            }
+         }
         
 //********************* SOANRQUBE ANALYSIS **********************
         //   stage("SonarQube analysis") {

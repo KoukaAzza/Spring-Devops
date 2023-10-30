@@ -87,9 +87,9 @@ pipeline {
            stage('Deploy to Nexus Repository') {
             steps {
                dir(REPO_DIR) {
-               withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'pwd', usernameVariable: 'name')]) {
+               withCredentials([string(credentialsId: 'nexus', variable: 'password')]) {
             // Replace with your Maven settings.xml path if needed
-                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
+                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$password"
             }
            }
           }

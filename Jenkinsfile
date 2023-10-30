@@ -1,9 +1,5 @@
 pipeline {
     agent any
-     environment {
-        // Define the REPO_DIR variable with the path to your Maven project
-        REPO_DIR = '/var/lib/jenkins/workspace/Devops'
-    }
     stages {
         stage('Set Java Version') {
             steps {

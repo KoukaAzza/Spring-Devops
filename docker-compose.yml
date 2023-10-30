@@ -28,6 +28,6 @@ services:
       - spring.jpa.hibernate.ddl-auto=update
     ports:
       - 8082:8082
-    image: spring-app
+    image: azzakouka/spring-app:latest
     depends_on:
       - mysqldb

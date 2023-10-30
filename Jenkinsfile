@@ -22,7 +22,7 @@ pipeline {
             }
         }
 
-        stage('BUILD Backend- TESTS') {
+        stage('BUILD Backend- INSTALL') {
             steps {
                 withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
                     sh 'mvn clean install'
@@ -82,7 +82,17 @@ pipeline {
                         }
                     }
                 }
-        
+
+
+           stage('Deploy to Nexus Repository') {
+            steps {
+               dir(REPO_DIR) {
+               withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'pwd', usernameVariable: 'name')]) {
+            // Replace with your Maven settings.xml path if needed
+                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
+            }
+           }
+          }
 
           //******************************** DOCKER BUILD AND PUSH FRONTEND - ANGULAR :frontend  IMAGE **********
 
@@ -127,14 +137,14 @@ pipeline {
 //     }
 // }
 
-        stage('Run Docker Compose') {
-          steps {
-             script {
-            checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Docker', url: 'https://github.com/KoukaAzza/Spring-Devops']])
-            sh 'docker compose up -d' 
-              }
-            }
-         }
+        // stage('Run Docker Compose') {
+        //   steps {
+        //      script {
+        //     checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Docker', url: 'https://github.com/KoukaAzza/Spring-Devops']])
+        //     sh 'docker compose up -d' 
+        //       }
+        //     }
+        //  }
         
 //********************* SOANRQUBE ANALYSIS **********************
         //   stage("SonarQube analysis") {

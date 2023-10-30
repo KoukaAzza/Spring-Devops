@@ -16,7 +16,9 @@ services:
       - jpa.hibernate.ddl-auto=update
       - jpa.show-sql=true
       - jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
-  backend:
+
+  cours:
+    build: ./
     environment:
       - spring.datasource.url=jdbc:mysql://mysqldb:3306/devops?createDatabaseIfNotExist=true
       - spring.datasource.username=root
@@ -29,4 +31,3 @@ services:
     image: spring-app
     depends_on:
       - mysqldb
- 

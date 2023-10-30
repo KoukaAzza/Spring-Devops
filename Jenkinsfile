@@ -88,12 +88,19 @@ pipeline {
                 }
 
 
-           stage('Deploy to Nexus Repository') {
+              stage('Deploy to Nexus Repository') {
             steps {
-               dir(REPO_DIR) {
-              withCredentials([string(credentialsId: 'nexus', variable: 'password')]) {
-            // Replace with your Maven settings.xml path if needed
-                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$password"
+              script {
+                        // Add the Git checkout step for the backend repository here
+                        checkout([
+                            $class: 'GitSCM',
+                            branches: [[name: '*/master']],
+                            userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+                        ])
+                        
+                        // Authenticate with Docker Hub using credentials
+                        withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
+                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
             }
            }
           }

@@ -1,5 +1,9 @@
 pipeline {
     agent any
+     environment {
+        // Define the REPO_DIR variable with the path to your Maven project
+        REPO_DIR = '/var/lib/jenkins/workspace/Devops'
+    }
     stages {
         stage('Set Java Version') {
             steps {
@@ -87,7 +91,7 @@ pipeline {
            stage('Deploy to Nexus Repository') {
             steps {
                dir(REPO_DIR) {
-               withCredentials([string(credentialsId: 'nexus', variable: 'password')]) {
+              withCredentials([string(credentialsId: 'nexus', variable: 'password')]) {
             // Replace with your Maven settings.xml path if needed
                 sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$password"
             }

@@ -93,6 +93,7 @@ pipeline {
             }
            }
           }
+        }
 
           //******************************** DOCKER BUILD AND PUSH FRONTEND - ANGULAR :frontend  IMAGE **********
 

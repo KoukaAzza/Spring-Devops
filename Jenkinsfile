@@ -84,25 +84,25 @@ pipeline {
                 }
 
 
-              stage('Deploy to Nexus Repository') {
-            steps {
-              script {
-                        // Add the Git checkout step for the backend repository here
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: '*/master']],
-                            userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
-                        ])
+        //       stage('Deploy to Nexus Repository') {
+        //     steps {
+        //       script {
+        //                 // Add the Git checkout step for the backend repository here
+        //                 checkout([
+        //                     $class: 'GitSCM',
+        //                     branches: [[name: '*/master']],
+        //                     userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+        //                 ])
                         
-                        // Authenticate with Docker Hub using credentials
-                        withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
-                             withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
-            }
-            }
-           }
-          }
-        }
+        //                 // Authenticate with Docker Hub using credentials
+        //                 withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
+        //                      withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+        //         sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
+        //     }
+        //     }
+        //    }
+        //   }
+        // }
 
           //******************************** DOCKER BUILD AND PUSH FRONTEND - ANGULAR :frontend  IMAGE **********
 

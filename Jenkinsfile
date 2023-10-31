@@ -38,55 +38,30 @@ pipeline {
 
 
 //************************************* BUILD FRONTEND - ANGULAR ***************************
-                // stage('Checkout Frontend Repo') {
-                //     steps {
-                //         script {
-                //             checkout([
-                //                 $class: 'GitSCM',
-                //                 branches: [[name: 'master']],
-                //                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
-                //             ])
-                //         }
-                //     }
-                // }
+                stage('Checkout Frontend Repo') {
+                    steps {
+                        script {
+                            checkout([
+                                $class: 'GitSCM',
+                                branches: [[name: 'master']],
+                                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops.git']]
+                            ])
+                        }
+                    }
+                }
 
-                // stage('Build Frontend') {
-                //     steps {
-                //         sh 'npm install'
-                //         sh 'npm run ng build'
-                //     }
-                // }
+                stage('Build Frontend') {
+                    steps {
+                        sh 'npm install'
+                        sh 'npm run ng build'
+                    }
+                }
 
 //******************************** DOCKER BUILD AND PUSH IMAGES **************************
                     //******************************** DOCKER BUILD AND PUSH BACKEND - SPRINGBOOT :latest  IMAGE
-            // stage('Build and Push Backend Image') {
-            //     steps {
-            //         script {
-            //             // Add the Git checkout step for the backend repository here
-            //             checkout([
-            //                 $class: 'GitSCM',
-            //                 branches: [[name: '*/master']],
-            //                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
-            //             ])
-                        
-            //             // Authenticate with Docker Hub using credentials
-            //             withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
-            //                 sh "docker login -u azzakouka -p azzaesprit159"
-            //             }
-            
-            //               // Build the backend Docker image
-            //                 def backendImage = docker.build('azzakouka/spring-app', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
-                            
-            //                 // Push the Docker image
-            //                 backendImage.push()
-            //             }
-                //     }
-                // }
-
-
-              stage('Deploy to Nexus Repository') {
-            steps {
-              script {
+            stage('Build and Push Backend Image') {
+                steps {
+                    script {
                         // Add the Git checkout step for the backend repository here
                         checkout([
                             $class: 'GitSCM',
@@ -95,57 +70,82 @@ pipeline {
                         ])
                         
                         // Authenticate with Docker Hub using credentials
-                       withCredentials([usernamePassword(credentialsId: 'nexus3', passwordVariable: 'pwd', usernameVariable: 'name')]) {
-                             withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
-                sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
-            }
-            }
-           }
-          }
-        }
+                        withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
+                            sh "docker login -u azzakouka -p azzaesprit159"
+                        }
+            
+                          // Build the backend Docker image
+                            def backendImage = docker.build('azzakouka/spring-app', '-f /var/lib/jenkins/workspace/Devops/Dockerfile .')
+                            
+                            // Push the Docker image
+                            backendImage.push()
+                        }
+                    }
+                }
+
+
+        //       stage('Deploy to Nexus Repository') {
+        //     steps {
+        //       script {
+        //                 // Add the Git checkout step for the backend repository here
+        //                 checkout([
+        //                     $class: 'GitSCM',
+        //                     branches: [[name: '*/master']],
+        //                     userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+        //                 ])
+                        
+        //                 // Authenticate with Docker Hub using credentials
+        //                withCredentials([usernamePassword(credentialsId: 'nexus3', passwordVariable: 'pwd', usernameVariable: 'name')]) {
+        //                      withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
+        //         sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
+        //     }
+        //     }
+        //    }
+        //   }
+        // }
 
           //******************************** DOCKER BUILD AND PUSH FRONTEND - ANGULAR :frontend  IMAGE **********
 
-//         stage('Build and Push Frontend Image') {
-//     steps {
-//         script {
-//             // Add the Git checkout step for the backend repository here
-//             checkout([
-//                 $class: 'GitSCM',
-//                 branches: [[name: '*/master']],
-//                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops']]
-//             ])
-            
-//             // Authenticate with Docker Hub using credentials
-//             withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
-//                 sh "docker login -u azzakouka -p azzaesprit159"
-//             }
-            
-//             // Build the backend Docker image
-//             def backendImage = docker.build('azzakouka/devops:frontend', '-f Dockerfile .')
-            
-//             // Push the Docker image
-//             backendImage.push()
-//         }
-//     }
-// }
-
-//*********************** DOCKER-COMPOSE ****************
-
-stage('Run Docker Compose') {
+        stage('Build and Push Frontend Image') {
     steps {
         script {
+            // Add the Git checkout step for the backend repository here
             checkout([
                 $class: 'GitSCM',
-                branches: [[name: '*/master']], 
-                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+                branches: [[name: '*/master']],
+                userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/front-devops']]
             ])
-
-            // Run the docker-compose command
-            sh 'docker compose up -d' 
+            
+            // Authenticate with Docker Hub using credentials
+            withCredentials([string(credentialsId: 'Docker', variable: 'password')]) {
+                sh "docker login -u azzakouka -p azzaesprit159"
+            }
+            
+            // Build the backend Docker image
+            def backendImage = docker.build('azzakouka/devops:frontend', '-f Dockerfile .')
+            
+            // Push the Docker image
+            backendImage.push()
         }
     }
 }
+
+//*********************** DOCKER-COMPOSE ****************
+
+// stage('Run Docker Compose') {
+//     steps {
+//         script {
+//             checkout([
+//                 $class: 'GitSCM',
+//                 branches: [[name: '*/master']], 
+//                 userRemoteConfigs: [[url: 'https://github.com/KoukaAzza/Spring-Devops']]
+//             ])
+
+//             // Run the docker-compose command
+//             sh 'docker compose up -d' 
+//         }
+//     }
+// }
 
         // stage('Run Docker Compose') {
         //   steps {

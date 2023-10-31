@@ -4,7 +4,6 @@ services:
   mysqldb:
     image: mysql:5.7
     restart: unless-stopped
-    env_file: .env-mysqldb  # Use .env-mysqldb for MySQL-specific environment variables
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=devops

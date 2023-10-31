@@ -1,28 +1,30 @@
+version: "3.8"
 services:
-  mysql-db:
-    image: mysql
+  mysqldb:
+    container_name: mysqldb
+    image: "mysql:latest"
+    restart: always
+    ports:
+      - 3333:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=root
-    ports:
-      - 3306:3306
-    restart: always
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 20s
-      retries: 10
+      - MYSQL_DATABASE=devops
+    networks:
+      - default  # Specify the network for the MySQL container
 
   back:
-    image: spring-app
-    container_name: spring-app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    depends_on:
-      mysql-db:
+    build: ./
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/shopkeeper?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/devops?createDatabaseIfNotExist=true
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+      - spring.jpa.show-sql=true
+      - spring.jpa.hibernate.ddl-auto=update
+    ports:
+      - 8082:8082
+    image: azzakouka/spring-app:latest
+    depends_on:
+      - mysqldb
+    networks:
+      - default  # Specify the same network for the Spring Boot container

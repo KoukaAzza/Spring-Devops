@@ -95,7 +95,7 @@ pipeline {
                         ])
                         
                         // Authenticate with Docker Hub using credentials
-                        withCredentials([string(credentialsId: 'nexus3', variable: 'password')]) {
+                       withCredentials([usernamePassword(credentialsId: 'nexus3', passwordVariable: 'pwd', usernameVariable: 'name')]) {
                              withEnv(["JAVA_HOME=${tool name: 'JAVA_HOME', type: 'jdk'}"]) {
                 sh "mvn deploy -s /usr/share/maven/conf/settings.xml -Dusername=\$name -Dpassword=\$pwd"
             }
